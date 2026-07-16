@@ -11,6 +11,15 @@ import {
 } from './content/loadContent.js';
 
 // --- THEME ---
+// Hero darkening: 0 = no darkening at all, 1 = solid black at the bottom.
+// This is the opacity at the BOTTOM of the hero section; it always fades
+// to fully transparent at the top, regardless of this number.
+const HERO_DARKEN_BOTTOM = 0.5;
+
+// Brand ticker logos: rendered as grey silhouettes regardless of the
+// original logo's color (via CSS grayscale), at this opacity (0 to 1).
+const TICKER_LOGO_OPACITY = 0.4;
+
 const THEME = {
   gradient: 'bg-gradient-to-r from-[#7519A2] via-[#FC6737] to-[#FCB338]',
   gradientText: 'bg-clip-text text-transparent bg-gradient-to-r from-[#7519A2] via-[#FC6737] to-[#FCB338]',
@@ -58,7 +67,7 @@ const Logo = ({ variant = "nav" }) => {
   const src = variant === "footer" ? SITE.footerLogo : SITE.navLogo;
   // Change h-8 to resize the nav logo, h-8 in the footer branch to resize
   // the footer logo — independently of each other.
-  const sizeClass = variant === "footer" ? "h-4 w-auto" : "h-4 w-auto";
+  const sizeClass = variant === "footer" ? "h-8 w-auto" : "h-8 w-auto";
 
   if (src) {
     return (
@@ -241,8 +250,17 @@ const Hero = ({ onNavigate }) => {
         <UniversalMedia media={heroMedia} className="w-full h-full object-cover opacity-90" autoPlayInView={true} />
       </motion.div>
 
-      <div className="absolute inset-0 z-10 bg-black/40" />
-      <div className="absolute inset-0 z-10 opacity-30 mix-blend-overlay pointer-events-none" style={{ background: 'linear-gradient(45deg, #7519A2, #FC6737, #FCB338)' }} />
+      {/* Hero darkening overlay — controls text readability over the media.
+          Change HERO_DARKEN_BOTTOM below (0 to 1) to adjust strength.
+          It's a gradient: HERO_DARKEN_BOTTOM opacity black at the bottom of
+          the hero, fading to fully transparent at the top. */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{ background: `linear-gradient(to top, rgba(0,0,0,${HERO_DARKEN_BOTTOM}), rgba(0,0,0,0))` }}
+      />
+      {/* Separate, second layer: fades to the site's dark background color
+          right at the very bottom edge of the hero, so it blends into the
+          section below it. Independent from the darkening overlay above. */}
       <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-transparent pointer-events-none" />
 
       <div className={`relative z-20 px-6 md:px-12 w-full h-full max-w-[1400px] mx-auto flex flex-col ${getAlignmentClasses(SITE.hero.alignment)}`}>
@@ -292,7 +310,8 @@ const BrandTicker = () => {
             key={i}
             src={brand.logo}
             alt="Brand logo"
-            className="h-8 md:h-10 w-auto object-contain opacity-40 grayscale hover:opacity-70 hover:grayscale-0 transition-all duration-300"
+            className="h-8 md:h-10 w-auto object-contain grayscale transition-opacity duration-300 hover:opacity-100"
+            style={{ opacity: TICKER_LOGO_OPACITY }}
           />
         ))}
       </motion.div>
