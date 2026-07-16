@@ -49,13 +49,30 @@ const SafeImage = ({ src, fallback = FALLBACK_IMAGE, ...props }) => {
   );
 };
 
-const Logo = () => (
-  <div className="flex items-center gap-2 group cursor-pointer z-50 relative">
-    <div className="w-8 h-8 rounded-sm bg-white flex items-center justify-center text-black font-bold text-xl group-hover:bg-[#3284EF] transition-colors duration-500">G</div>
-    <div className="w-8 h-8 rounded-sm border border-white flex items-center justify-center text-white font-bold text-xl group-hover:border-[#3284EF] transition-colors duration-500">B</div>
-    <span className="font-semibold text-lg ml-1 tracking-wider hidden sm:block group-hover:text-[#3284EF] transition-colors duration-500">STUDIOS</span>
-  </div>
-);
+// Renders the CMS-uploaded logo (content/site.json -> logo) when one has
+// been set in Decap; otherwise falls back to the default "GB STUDIOS"
+// letter mark so the site never looks broken with no logo uploaded.
+const Logo = () => {
+  if (SITE.logo) {
+    return (
+      <div className="flex items-center group cursor-pointer z-50 relative">
+        <img
+          src={SITE.logo}
+          alt="GB Studios"
+          className="h-8 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 group cursor-pointer z-50 relative">
+      <div className="w-8 h-8 rounded-sm bg-white flex items-center justify-center text-black font-bold text-xl group-hover:bg-[#3284EF] transition-colors duration-500">G</div>
+      <div className="w-8 h-8 rounded-sm border border-white flex items-center justify-center text-white font-bold text-xl group-hover:border-[#3284EF] transition-colors duration-500">B</div>
+      <span className="font-semibold text-lg ml-1 tracking-wider hidden sm:block group-hover:text-[#3284EF] transition-colors duration-500">STUDIOS</span>
+    </div>
+  );
+};
 
 const MagneticButton = ({ children, onClick, className = '', variant = 'primary' }) => {
   const buttonRef = useRef(null);
@@ -249,8 +266,10 @@ const Hero = ({ onNavigate }) => {
 };
 
 const BrandTicker = () => {
-  const brands = SITE.brands || [];
+  const brands = (SITE.brands || []).filter(b => b?.logo);
   const tickerItems = [...brands, ...brands, ...brands, ...brands];
+
+  if (brands.length === 0) return null;
 
   return (
     <div className="py-8 bg-[#050505] border-y border-white/5 overflow-hidden flex relative">
@@ -262,7 +281,12 @@ const BrandTicker = () => {
         className="flex gap-16 md:gap-32 min-w-max px-8 items-center"
       >
         {tickerItems.map((brand, i) => (
-          <div key={i} className="text-xl md:text-3xl font-black tracking-widest text-white/20 uppercase">{brand}</div>
+          <img
+            key={i}
+            src={brand.logo}
+            alt="Brand logo"
+            className="h-8 md:h-10 w-auto object-contain opacity-40 grayscale hover:opacity-70 hover:grayscale-0 transition-all duration-300"
+          />
         ))}
       </motion.div>
     </div>
@@ -658,6 +682,25 @@ const AboutPage = ({ onNavigate }) => {
         </div>
       </section>
 
+      {(ABOUT_CMS.whyWeExist || ABOUT_CMS.ourGoal) && (
+        <section className="py-32 px-6 border-b border-white/5">
+          <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+            {ABOUT_CMS.whyWeExist && (
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-widest text-[#3284EF] mb-6">Why We Exist</h2>
+                <p className="text-2xl md:text-3xl font-light leading-relaxed">{ABOUT_CMS.whyWeExist}</p>
+              </div>
+            )}
+            {ABOUT_CMS.ourGoal && (
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-widest text-[#3284EF] mb-6">Our Goal</h2>
+                <p className="text-2xl md:text-3xl font-light leading-relaxed">{ABOUT_CMS.ourGoal}</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       <section className="py-32 px-6">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
           <div className="md:col-span-5 relative">
@@ -908,6 +951,21 @@ const App = () => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // index.html ships a static default favicon link. If an editor has
+  // uploaded a custom one via Decap (content/site.json -> favicon), swap
+  // the tag's href on load so the browser tab icon reflects it — no build
+  // step required, just a small runtime DOM update.
+  useEffect(() => {
+    if (!SITE.favicon) return;
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = SITE.favicon;
   }, []);
 
   const navigate = (route, project = null) => {

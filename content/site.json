@@ -1,5 +1,7 @@
 {
   "startYear": 2018,
+  "logo": "",
+  "favicon": "",
   "hero": {
     "media_type": "video",
     "media_video_upload": "",
@@ -9,7 +11,11 @@
     "headline": "Clarity for Creativity.",
     "subheadline": "A premium creative studio specializing in motion design, brand identity, and immersive event visuals for global forward-thinking brands."
   },
-  "brands": ["Nike", "Insomniac", "Aura Beauty", "Porsche", "Sony", "Innovate Corp", "Vanguard"],
+  "brands": [
+    { "logo": "" },
+    { "logo": "" },
+    { "logo": "" }
+  ],
   "footerBlurb": "GB Studios is a premium creative studio building highly crafted visual experiences for brands that want to stand out.",
   "contactEmail": "hello@gbstudios.com"
 }

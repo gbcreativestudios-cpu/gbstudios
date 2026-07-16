@@ -161,6 +161,11 @@ collections:
       - { label: "Role", name: "role", widget: "string" }
       - { label: "Photo", name: "image", widget: "image" }
       - { label: "Bio", name: "bio", widget: "text" }
+      - label: "Show on website"
+        name: "visible"
+        widget: "boolean"
+        default: true
+        hint: "Turn off to hide this member from the About page without deleting them."
       - label: "Social Links"
         name: "socials"
         widget: "select"
@@ -180,10 +185,20 @@ collections:
           - { label: "Studio Founded Year", name: "startYear", widget: "number", hint: "Used to auto-calculate 'years of experience'." }
           - { label: "Contact Email", name: "contactEmail", widget: "string" }
           - { label: "Footer Blurb", name: "footerBlurb", widget: "text" }
-          - label: "Brand Ticker Logos (text)"
+          - label: "Logo"
+            name: "logo"
+            widget: "image"
+            required: false
+            hint: "Shown in the top nav and footer. Leave blank to keep the default 'GB STUDIOS' letter mark. Transparent PNG or SVG recommended — it's displayed at a fixed height."
+          - label: "Favicon"
+            name: "favicon"
+            widget: "image"
+            required: false
+            hint: "Browser tab icon. Leave blank to keep the default. Square image recommended (SVG or PNG, at least 48x48px)."
+          - label: "Brand Ticker Logos"
             name: "brands"
             widget: "list"
-            field: { label: "Brand Name", name: "brand", widget: "string" }
+            field: { label: "Logo", name: "logo", widget: "image" }
           - label: "Hero Section"
             name: "hero"
             widget: "object"
@@ -209,6 +224,8 @@ collections:
         fields:
           - { label: "About Page Headline", name: "heroTitle", widget: "string" }
           - { label: "About Page Subheadline", name: "heroSubtitle", widget: "text" }
+          - { label: "Why We Exist", name: "whyWeExist", widget: "text", required: false }
+          - { label: "Our Goal", name: "ourGoal", widget: "text", required: false }
           - label: "Founder"
             name: "founder"
             widget: "object"

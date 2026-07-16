@@ -28,7 +28,9 @@ export const MOTION_PROJECTS = Object.values(motionCategoryModules)
 
 export const TESTIMONIALS = Object.values(testimonialModules).map(unwrap);
 
-export const TEAM = Object.values(teamModules).map((mod, i) => ({ id: `team-${i}`, ...unwrap(mod) }));
+export const TEAM = Object.values(teamModules)
+  .map((mod, i) => ({ id: `team-${i}`, ...unwrap(mod) }))
+  .filter(member => member.visible !== false);
 
 // --- Media resolution helpers ---
 // CMS video fields store either a directly-uploaded file (video_upload) or a
