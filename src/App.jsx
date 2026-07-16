@@ -25,6 +25,100 @@ const THEME = {
   gradientText: 'bg-clip-text text-transparent bg-gradient-to-r from-[#7519A2] via-[#FC6737] to-[#FCB338]',
 };
 
+// =========================================================================
+// COLOR CONTROL PANEL
+// Every background, accent, and gradient color in the site, grouped by
+// section, so each can be changed independently — editing one value here
+// never affects any other, even where two things currently look the same.
+// (Plain white/black body text and its opacity variants, like text-white/60,
+// are left as Tailwind classes — those are just readability tints for
+// secondary copy, not distinct brand colors.)
+// =========================================================================
+const COLORS = {
+  // Global / shared across the whole site
+  pageBackground: '#050505',
+  textSelectionBackground: '#3284EF',
+
+  // Logo fallback letter-mark (only used if no logo image is uploaded)
+  logoLetterHover: '#3284EF',
+
+  // Primary button (used across Hero, About, etc.)
+  primaryButtonBg: '#3284EF',
+  primaryButtonHoverBg: '#ffffff',
+
+  // Nav bar
+  navScrolledBg: 'rgba(0,0,0,0.8)',
+  navLinkActive: '#3284EF',
+  navCtaBg: '#ffffff',
+  navCtaHoverBg: '#3284EF',
+  navMobileMenuBg: '#000000',
+
+  // Brand ticker strip
+  tickerBg: '#050505',
+
+  // Video lightbox modal (opened from any play button site-wide)
+  lightboxBg: '#111111',
+
+  // Work / Selected Work section
+  workHeadingGradientFrom: '#7519A2',
+  workHeadingGradientVia: '#FC6737',
+  workHeadingGradientTo: '#FCB338',
+  workFilterActiveBg: '#ffffff',
+  workFilterInactiveBg: '#111111',
+  workFilterInactiveHoverBg: '#222222',
+  projectCardBg: '#111111',
+  projectCardHoverIconBg: '#3284EF',
+  motionVideoCardBg: '#111111',
+  motionVideoCardHoverBorder: '#3284EF',
+
+  // Our Process section
+  processSectionBg: '#0a0a0a',
+  processCardBg: '#111111',
+  processCardHoverBorder: '#3284EF',
+
+  // Pushing Boundaries stats section
+  boundariesSectionBg: '#000000',
+  boundariesStatNumber: '#3284EF',
+
+  // Client testimonials marquee
+  testimonialsSectionBg: '#3284EF',
+
+  // About page
+  aboutPageBg: '#000000',
+  aboutHeroSectionBg: '#0a0a0a',
+  aboutSectionLabel: '#3284EF', // "Why We Exist" / "Our Goal" labels
+  founderSectionLabel: '#3284EF', // "The Founder" label — independent from the above
+  aboutTeamSectionBg: '#0a0a0a',
+  teamRoleColor: '#3284EF',
+  teamSocialHover: '#3284EF',
+
+  // Project detail page
+  projectDetailBg: '#000000',
+  projectDetailAssetCardBg: '#111111',
+  projectDetailOutcomeText: '#3284EF',
+  projectDetailUpNextHover: '#3284EF',
+
+  // Start a Project page (form)
+  startFormSubmitGradientFrom: '#7519A2',
+  startFormSubmitGradientVia: '#FC6737',
+  startFormSubmitGradientTo: '#FCB338',
+  formInputBg: '#111111',
+  formInputFocusBorder: '#3284EF',
+  formRadioAccent: '#3284EF',
+
+  // Contact page
+  contactSocialIconBg: '#111111',
+  contactSocialIconHoverBg: '#3284EF',
+  contactEmailHover: '#3284EF',
+  contactSendButtonHoverBg: '#3284EF',
+  contactFormCardBg: '#0a0a0a',
+  contactSuccessIcon: '#3284EF',
+
+  // Footer
+  footerBg: '#000000',
+  footerAdminLinkHover: '#3284EF',
+};
+
 // A generic, always-available fallback image — used whenever a CMS image
 // field is empty or the URL it points to 404s, so a broken link never shows
 // up as a broken-image icon on the live site.
@@ -82,10 +176,10 @@ const Logo = ({ variant = "nav" }) => {
   }
 
   return (
-    <div className="flex items-center gap-2 group cursor-pointer z-50 relative">
-      <div className="w-8 h-8 rounded-sm bg-white flex items-center justify-center text-black font-bold text-xl group-hover:bg-[#3284EF] transition-colors duration-500">G</div>
-      <div className="w-8 h-8 rounded-sm border border-white flex items-center justify-center text-white font-bold text-xl group-hover:border-[#3284EF] transition-colors duration-500">B</div>
-      <span className="font-semibold text-lg ml-1 tracking-wider hidden sm:block group-hover:text-[#3284EF] transition-colors duration-500">STUDIOS</span>
+    <div className="flex items-center gap-2 group cursor-pointer z-50 relative" style={{ '--logo-hover': COLORS.logoLetterHover }}>
+      <div className="w-8 h-8 rounded-sm bg-white flex items-center justify-center text-black font-bold text-xl group-hover:bg-[var(--logo-hover)] transition-colors duration-500">G</div>
+      <div className="w-8 h-8 rounded-sm border border-white flex items-center justify-center text-white font-bold text-xl group-hover:border-[var(--logo-hover)] transition-colors duration-500">B</div>
+      <span className="font-semibold text-lg ml-1 tracking-wider hidden sm:block group-hover:text-[var(--logo-hover)] transition-colors duration-500">STUDIOS</span>
     </div>
   );
 };
@@ -103,10 +197,13 @@ const MagneticButton = ({ children, onClick, className = '', variant = 'primary'
 
   const baseStyles = "relative inline-flex items-center justify-center px-8 py-4 rounded-full font-medium tracking-wide overflow-hidden group transition-all duration-300";
   const variants = {
-    primary: `bg-[#3284EF] text-white hover:bg-white hover:text-black`,
+    primary: `text-white hover:text-black`,
     secondary: `border border-white/20 text-white hover:border-white bg-black/50 backdrop-blur-sm`,
     gradient: `${THEME.gradient} text-white`
   };
+  const variantStyle = variant === 'primary'
+    ? { '--btn-bg': COLORS.primaryButtonBg, '--btn-hover-bg': COLORS.primaryButtonHoverBg }
+    : {};
 
   return (
     <motion.button
@@ -116,7 +213,8 @@ const MagneticButton = ({ children, onClick, className = '', variant = 'primary'
       onClick={onClick}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${variant === 'primary' ? 'bg-[var(--btn-bg)] hover:bg-[var(--btn-hover-bg)]' : ''} ${className}`}
+      style={variantStyle}
     >
       <span className="relative z-10 flex items-center gap-2">{children}</span>
     </motion.button>
@@ -211,8 +309,8 @@ const LightboxVideoPlayer = ({ video, onClose }) => {
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`relative w-full max-w-6xl max-h-[90vh] flex items-center justify-center overflow-hidden rounded-xl bg-[#111]`}
-        style={{ aspectRatio: video.ratio === '9:16' ? 9 / 16 : video.ratio === '1:1' ? 1 / 1 : 16 / 9 }}
+        className={`relative w-full max-w-6xl max-h-[90vh] flex items-center justify-center overflow-hidden rounded-xl`}
+        style={{ aspectRatio: video.ratio === '9:16' ? 9 / 16 : video.ratio === '1:1' ? 1 / 1 : 16 / 9, backgroundColor: COLORS.lightboxBg }}
       >
         <UniversalMedia media={video} className="w-full h-full object-contain" controls={true} autoPlayInView={true} muted={false} />
         {video.title && (
@@ -246,7 +344,7 @@ const Hero = ({ onNavigate }) => {
 
   return (
     <section className="relative h-screen flex flex-col overflow-hidden">
-      <motion.div style={{ y }} className="absolute inset-0 z-0 bg-[#050505]">
+      <motion.div style={{ y, backgroundColor: COLORS.pageBackground }} className="absolute inset-0 z-0">
         <UniversalMedia media={heroMedia} className="w-full h-full object-cover opacity-90" autoPlayInView={true} />
       </motion.div>
 
@@ -297,9 +395,9 @@ const BrandTicker = () => {
   if (brands.length === 0) return null;
 
   return (
-    <div className="py-8 bg-[#050505] border-y border-white/5 overflow-hidden flex relative">
-      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+    <div className="py-8 border-y border-white/5 overflow-hidden flex relative" style={{ backgroundColor: COLORS.tickerBg }}>
+      <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, ${COLORS.tickerBg}, transparent)` }} />
+      <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: `linear-gradient(to left, ${COLORS.tickerBg}, transparent)` }} />
       <motion.div
         animate={{ x: ["0%", "-50%"] }}
         transition={{ ease: "linear", duration: 30, repeat: Infinity }}
@@ -330,12 +428,12 @@ const ProjectCard = ({ project, onClick }) => {
       className="group cursor-pointer flex flex-col gap-4"
       onClick={() => onClick(project)}
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#111] border border-white/5">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-white/5" style={{ backgroundColor: COLORS.projectCardBg }}>
         <SafeImage src={thumbUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
         <div className="absolute top-4 left-4 px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-medium border border-white/10 uppercase tracking-wide text-white">{project.category}</div>
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-          <div className="w-16 h-16 rounded-full bg-[#3284EF] flex items-center justify-center text-white transform scale-50 group-hover:scale-100 transition-transform duration-500 ease-out shadow-xl shadow-[#3284EF]/30">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center text-white transform scale-50 group-hover:scale-100 transition-transform duration-500 ease-out shadow-xl" style={{ backgroundColor: COLORS.projectCardHoverIconBg, boxShadow: `0 20px 25px -5px ${COLORS.projectCardHoverIconBg}4d` }}>
             <ArrowUpRight size={24} />
           </div>
         </div>
@@ -366,8 +464,8 @@ const WorkSection = ({ onProjectSelect }) => {
               return (
                 <div
                   key={vid.id}
-                  className="relative group cursor-pointer overflow-hidden rounded-lg bg-[#111] border border-white/5 hover:border-[#3284EF]/50 transition-all"
-                  style={{ aspectRatio: vid.ratio === '9:16' ? 9 / 16 : vid.ratio === '1:1' ? 1 / 1 : 16 / 9 }}
+                  className="relative group cursor-pointer overflow-hidden rounded-lg border border-white/5 hover:border-[var(--motion-hover-border)]/50 transition-all"
+                  style={{ aspectRatio: vid.ratio === '9:16' ? 9 / 16 : vid.ratio === '1:1' ? 1 / 1 : 16 / 9, backgroundColor: COLORS.motionVideoCardBg, '--motion-hover-border': COLORS.motionVideoCardHoverBorder }}
                   onClick={() => setPlayingVideo(resolved)}
                 >
                   <UniversalMedia media={resolved} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" autoPlayInView={false} />
@@ -391,13 +489,19 @@ const WorkSection = ({ onProjectSelect }) => {
   return (
     <section id="work" className="py-24 px-6 max-w-[1400px] mx-auto min-h-screen">
       <div className="flex flex-col mb-16 gap-8">
-        <h2 className={`text-4xl md:text-6xl font-bold tracking-tight pb-2 max-w-max ${THEME.gradientText}`}>Selected Work</h2>
+        <h2
+          className="text-4xl md:text-6xl font-bold tracking-tight pb-2 max-w-max bg-clip-text text-transparent"
+          style={{ backgroundImage: `linear-gradient(to right, ${COLORS.workHeadingGradientFrom}, ${COLORS.workHeadingGradientVia}, ${COLORS.workHeadingGradientTo})` }}
+        >
+          Selected Work
+        </h2>
         <div className="flex flex-wrap gap-2">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === cat ? 'bg-white text-black' : 'bg-[#111] text-white/70 hover:bg-[#222] hover:text-white border border-white/5'}`}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === cat ? 'text-black' : 'text-white/70 hover:text-white border border-white/5 hover:bg-[var(--filter-hover-bg)]'}`}
+              style={{ backgroundColor: activeCategory === cat ? COLORS.workFilterActiveBg : COLORS.workFilterInactiveBg, '--filter-hover-bg': COLORS.workFilterInactiveHoverBg }}
             >
               {cat}
             </button>
@@ -434,7 +538,7 @@ const ProcessSection = () => {
   const tickerItems = [...allThumbnails, ...allThumbnails, ...allThumbnails];
 
   return (
-    <section className="py-24 bg-[#0a0a0a] overflow-hidden">
+    <section className="py-24 overflow-hidden" style={{ backgroundColor: COLORS.processSectionBg }}>
       <div className="max-w-[1400px] mx-auto px-6 mb-24">
         <h2 className="text-4xl md:text-5xl font-bold mb-16 tracking-tight">Our Process</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -443,9 +547,10 @@ const ProcessSection = () => {
               key={step.title}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="p-8 rounded-2xl bg-[#111] border border-white/5 hover:border-[#3284EF]/30 transition-colors group"
+              className="p-8 rounded-2xl border border-white/5 hover:border-[var(--process-hover-border)]/30 transition-colors group"
+              style={{ backgroundColor: COLORS.processCardBg, '--process-hover-border': COLORS.processCardHoverBorder }}
             >
-              <div className="text-5xl font-light text-white/10 mb-6 group-hover:text-[#3284EF]/50 transition-colors">0{i + 1}</div>
+              <div className="text-5xl font-light text-white/10 mb-6 group-hover:text-[var(--process-hover-border)]/50 transition-colors">0{i + 1}</div>
               <h3 className="text-2xl font-semibold mb-4">{step.title}</h3>
               <p className="text-white/60 leading-relaxed text-sm">{step.desc}</p>
             </motion.div>
@@ -454,8 +559,8 @@ const ProcessSection = () => {
       </div>
 
       <div className="relative w-full overflow-hidden flex">
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: `linear-gradient(to right, ${COLORS.processSectionBg}, transparent)` }} />
+        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: `linear-gradient(to left, ${COLORS.processSectionBg}, transparent)` }} />
         <motion.div animate={{ x: ["0%", "-50%"] }} transition={{ ease: "linear", duration: 40, repeat: Infinity }} className="flex gap-4 min-w-max">
           {tickerItems.map((img, i) => (
             <div key={i} className="w-[200px] h-[280px] md:w-[280px] md:h-[400px] rounded-xl overflow-hidden flex-shrink-0 border border-white/5">
@@ -472,7 +577,7 @@ const PushingBoundariesSection = () => {
   const yearsOfExperience = new Date().getFullYear() - SITE.startYear;
 
   return (
-    <section className="py-32 px-6 relative overflow-hidden bg-black border-y border-white/5">
+    <section className="py-32 px-6 relative overflow-hidden border-y border-white/5" style={{ backgroundColor: COLORS.boundariesSectionBg }}>
       <div className="max-w-[1400px] mx-auto text-center flex flex-col items-center">
         <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight max-w-3xl">Pushing visual boundaries.</h2>
         <p className="text-lg text-white/70 mb-16 leading-relaxed max-w-2xl font-light">
@@ -480,11 +585,11 @@ const PushingBoundariesSection = () => {
         </p>
         <div className="grid grid-cols-2 gap-16 md:gap-32">
           <div>
-            <div className="text-5xl md:text-7xl font-bold text-[#3284EF] mb-4">250+</div>
+            <div className="text-5xl md:text-7xl font-bold mb-4" style={{ color: COLORS.boundariesStatNumber }}>250+</div>
             <div className="text-sm text-white/50 uppercase tracking-widest font-medium">Projects Delivered</div>
           </div>
           <div>
-            <div className="text-5xl md:text-7xl font-bold text-[#3284EF] mb-4">{yearsOfExperience}+</div>
+            <div className="text-5xl md:text-7xl font-bold mb-4" style={{ color: COLORS.boundariesStatNumber }}>{yearsOfExperience}+</div>
             <div className="text-sm text-white/50 uppercase tracking-widest font-medium">Years Experience</div>
           </div>
         </div>
@@ -497,7 +602,7 @@ const TestimonialsMarquee = () => {
   const items = [...TESTIMONIALS, ...TESTIMONIALS];
 
   return (
-    <section className="py-32 bg-[#3284EF] text-black overflow-hidden relative">
+    <section className="py-32 text-black overflow-hidden relative" style={{ backgroundColor: COLORS.testimonialsSectionBg }}>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
       <div className="max-w-[1400px] mx-auto px-6 relative z-10 mb-16 flex justify-between items-end">
         <h2 className="text-sm font-bold uppercase tracking-widest opacity-80">Client Outcomes</h2>
@@ -535,7 +640,7 @@ const BlockRenderer = ({ block }) => {
     case 'full-width-image':
     case 'image':
       return (
-        <div className="w-full rounded-2xl overflow-hidden bg-[#111] border border-white/5" style={{ aspectRatio: block.ratio === '1:1' ? 1 / 1 : 21 / 9 }}>
+        <div className="w-full rounded-2xl overflow-hidden border border-white/5" style={{ aspectRatio: block.ratio === '1:1' ? 1 / 1 : 21 / 9, backgroundColor: COLORS.projectDetailAssetCardBg }}>
           <UniversalMedia media={{ url: block.url, type: 'image' }} className="w-full h-full object-cover" />
         </div>
       );
@@ -556,7 +661,7 @@ const BlockRenderer = ({ block }) => {
       );
     case 'video':
       return (
-        <div className="w-full rounded-2xl overflow-hidden bg-[#111] border border-white/5" style={{ aspectRatio: block.ratio === '1:1' ? 1 / 1 : 16 / 9 }}>
+        <div className="w-full rounded-2xl overflow-hidden border border-white/5" style={{ aspectRatio: block.ratio === '1:1' ? 1 / 1 : 16 / 9, backgroundColor: COLORS.projectDetailAssetCardBg }}>
           <UniversalMedia media={resolveVideo(block)} className="w-full h-full object-cover" controls={false} muted={true} autoPlayInView={true} loop={true} />
         </div>
       );
@@ -576,7 +681,7 @@ const ProjectDetailPage = ({ project, onBack }) => {
   const brandMotion = project.content.brandMotion?.active ? resolveVideo(project.content.brandMotion) : null;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} className="pt-24 pb-32 min-h-screen bg-black">
+    <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} className="pt-24 pb-32 min-h-screen" style={{ backgroundColor: COLORS.projectDetailBg }}>
       <div className="max-w-[1400px] mx-auto px-6">
         <button onClick={onBack} className="mb-12 flex items-center gap-2 text-white/60 hover:text-white transition-colors">
           <ChevronLeft size={20} /> Back to Work
@@ -638,20 +743,20 @@ const ProjectDetailPage = ({ project, onBack }) => {
           {project.content.outcome && (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start border-t border-white/10 pt-16">
               <div className="md:col-span-4 text-white/40 uppercase tracking-widest text-sm font-medium">Outcome</div>
-              <div className="md:col-span-8 text-2xl font-light text-[#3284EF] leading-relaxed">{project.content.outcome}</div>
+              <div className="md:col-span-8 text-2xl font-light leading-relaxed" style={{ color: COLORS.projectDetailOutcomeText }}>{project.content.outcome}</div>
             </div>
           )}
           {project.content.results && (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start border-t border-white/10 pt-16">
               <div className="md:col-span-4 text-white/40 uppercase tracking-widest text-sm font-medium">Results</div>
-              <div className="md:col-span-8 text-2xl font-light text-[#3284EF] leading-relaxed">{project.content.results}</div>
+              <div className="md:col-span-8 text-2xl font-light leading-relaxed" style={{ color: COLORS.projectDetailOutcomeText }}>{project.content.results}</div>
             </div>
           )}
 
           {brandMotion && (
             <div className="border-t border-white/10 pt-16">
               <h3 className="text-3xl font-bold mb-8 tracking-tight">Brand Motion Anthem</h3>
-              <div className="w-full aspect-video bg-[#111] border border-white/5 rounded-2xl overflow-hidden cursor-pointer group relative" onClick={() => setPlayingVideo(brandMotion)}>
+              <div className="w-full aspect-video border border-white/5 rounded-2xl overflow-hidden cursor-pointer group relative" style={{ backgroundColor: COLORS.projectDetailAssetCardBg }} onClick={() => setPlayingVideo(brandMotion)}>
                 <UniversalMedia media={brandMotion} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" autoPlayInView={false} />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="w-16 h-16 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-white/20">
@@ -669,7 +774,7 @@ const ProjectDetailPage = ({ project, onBack }) => {
                 {project.content.motionAssets.map((asset, i) => {
                   const resolved = resolveVideo(asset);
                   return (
-                    <div key={i} className="relative group cursor-pointer overflow-hidden rounded-lg bg-[#111] border border-white/5" style={{ aspectRatio: asset.ratio === '9:16' ? 9 / 16 : 16 / 9 }} onClick={() => setPlayingVideo(resolved)}>
+                    <div key={i} className="relative group cursor-pointer overflow-hidden rounded-lg border border-white/5" style={{ aspectRatio: asset.ratio === '9:16' ? 9 / 16 : 16 / 9, backgroundColor: COLORS.projectDetailAssetCardBg }} onClick={() => setPlayingVideo(resolved)}>
                       <UniversalMedia media={resolved} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" autoPlayInView={false} />
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <div className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-white/20">
@@ -686,7 +791,7 @@ const ProjectDetailPage = ({ project, onBack }) => {
 
         <div className="mt-32 pt-16 border-t border-white/10 text-center">
           <div className="text-white/40 uppercase tracking-widest text-sm mb-4">Up Next</div>
-          <button onClick={onBack} className="text-4xl md:text-6xl font-bold hover:text-[#3284EF] transition-colors">View All Projects</button>
+          <button onClick={onBack} className="text-4xl md:text-6xl font-bold transition-colors hover:text-[var(--upnext-hover)]" style={{ '--upnext-hover': COLORS.projectDetailUpNextHover }}>View All Projects</button>
         </div>
       </div>
       <AnimatePresence>{playingVideo && <LightboxVideoPlayer video={playingVideo} onClose={() => setPlayingVideo(null)} />}</AnimatePresence>
@@ -700,8 +805,8 @@ const AboutPage = ({ onNavigate }) => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen bg-black">
-      <section className="pt-40 pb-24 px-6 border-b border-white/5 bg-[#0a0a0a]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="min-h-screen" style={{ backgroundColor: COLORS.aboutPageBg }}>
+      <section className="pt-40 pb-24 px-6 border-b border-white/5" style={{ backgroundColor: COLORS.aboutHeroSectionBg }}>
         <div className="max-w-[1400px] mx-auto">
           <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 max-w-4xl leading-[1.1]">{ABOUT_CMS.heroTitle}</h1>
           <p className="text-xl md:text-3xl text-white/60 font-light max-w-3xl leading-relaxed">{ABOUT_CMS.heroSubtitle}</p>
@@ -713,13 +818,13 @@ const AboutPage = ({ onNavigate }) => {
           <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
             {ABOUT_CMS.whyWeExist && (
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[#3284EF] mb-6">Why We Exist</h2>
+                <h2 className="text-sm font-bold uppercase tracking-widest mb-6" style={{ color: COLORS.aboutSectionLabel }}>Why We Exist</h2>
                 <p className="text-2xl md:text-3xl font-light leading-relaxed">{ABOUT_CMS.whyWeExist}</p>
               </div>
             )}
             {ABOUT_CMS.ourGoal && (
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-widest text-[#3284EF] mb-6">Our Goal</h2>
+                <h2 className="text-sm font-bold uppercase tracking-widest mb-6" style={{ color: COLORS.aboutSectionLabel }}>Our Goal</h2>
                 <p className="text-2xl md:text-3xl font-light leading-relaxed">{ABOUT_CMS.ourGoal}</p>
               </div>
             )}
@@ -735,7 +840,7 @@ const AboutPage = ({ onNavigate }) => {
             </div>
           </div>
           <div className="md:col-span-7">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#3284EF] mb-4">The Founder</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest mb-4" style={{ color: COLORS.founderSectionLabel }}>The Founder</h2>
             <h3 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{ABOUT_CMS.founder.name}</h3>
             <p className="text-white/50 text-lg uppercase tracking-widest mb-10">{ABOUT_CMS.founder.title}</p>
             <Quote size={40} className="text-white/10 mb-6" />
@@ -745,23 +850,23 @@ const AboutPage = ({ onNavigate }) => {
         </div>
       </section>
 
-      <section className="py-32 px-6 bg-[#0a0a0a] border-t border-white/5">
+      <section className="py-32 px-6 border-t border-white/5" style={{ backgroundColor: COLORS.aboutTeamSectionBg }}>
         <div className="max-w-[1400px] mx-auto">
           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-16">The Collective</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {TEAM.map(member => (
-              <div key={member.id} className="group">
-                <div className="aspect-square rounded-2xl overflow-hidden mb-6 bg-[#111] border border-white/5">
+              <div key={member.id} className="group" style={{ '--team-social-hover': COLORS.teamSocialHover }}>
+                <div className="aspect-square rounded-2xl overflow-hidden mb-6 border border-white/5" style={{ backgroundColor: COLORS.projectCardBg }}>
                   <SafeImage src={member.image} alt={member.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" />
                 </div>
                 <h4 className="text-2xl font-bold mb-1">{member.name}</h4>
-                <p className="text-sm text-[#3284EF] uppercase tracking-widest font-medium mb-4">{member.role}</p>
+                <p className="text-sm uppercase tracking-widest font-medium mb-4" style={{ color: COLORS.teamRoleColor }}>{member.role}</p>
                 <p className="text-white/60 text-sm leading-relaxed mb-6">{member.bio}</p>
                 <div className="flex gap-4 opacity-50 group-hover:opacity-100 transition-opacity">
-                  {member.socials?.includes('instagram') && <a href="#" className="hover:text-[#3284EF]"><Instagram size={18} /></a>}
-                  {member.socials?.includes('twitter') && <a href="#" className="hover:text-[#3284EF]"><Twitter size={18} /></a>}
-                  {member.socials?.includes('linkedin') && <a href="#" className="hover:text-[#3284EF]"><Linkedin size={18} /></a>}
-                  {member.socials?.includes('vimeo') && <a href="#" className="hover:text-[#3284EF]"><Play size={18} /></a>}
+                  {member.socials?.includes('instagram') && <a href="#" className="hover:text-[var(--team-social-hover)]"><Instagram size={18} /></a>}
+                  {member.socials?.includes('twitter') && <a href="#" className="hover:text-[var(--team-social-hover)]"><Twitter size={18} /></a>}
+                  {member.socials?.includes('linkedin') && <a href="#" className="hover:text-[var(--team-social-hover)]"><Linkedin size={18} /></a>}
+                  {member.socials?.includes('vimeo') && <a href="#" className="hover:text-[var(--team-social-hover)]"><Play size={18} /></a>}
                 </div>
               </div>
             ))}
@@ -810,7 +915,7 @@ const StartProjectPage = ({ onBack }) => {
     return (
       <div className="min-h-screen pt-32 pb-24 px-6 flex flex-col items-center justify-center">
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
-          <CheckCircle2 size={80} className="text-[#3284EF] mx-auto mb-8" />
+          <CheckCircle2 size={80} className="mx-auto mb-8" style={{ color: COLORS.contactSuccessIcon }} />
           <h1 className="text-5xl font-bold mb-4">Brief Received.</h1>
           <p className="text-white/60 mb-8 max-w-md mx-auto">Thank you for reaching out. A producer from GB Studios will review your requirements and contact you within 24 hours.</p>
           <MagneticButton onClick={onBack}>Return Home</MagneticButton>
@@ -828,17 +933,17 @@ const StartProjectPage = ({ onBack }) => {
 
       {error && <p className="text-red-400 mb-6">Something went wrong sending your brief — please try again or email us directly.</p>}
 
-      <form name="project-brief" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit} className="space-y-12">
+      <form name="project-brief" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit} className="space-y-12" style={{ '--form-input-bg': COLORS.formInputBg, '--form-focus-border': COLORS.formInputFocusBorder }}>
         <input type="hidden" name="form-name" value="project-brief" />
         <p className="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
 
         <div className="space-y-6">
           <h3 className="text-2xl font-semibold border-b border-white/10 pb-4">01. Personal Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Full Name</label><input required name="fullName" type="text" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Company / Organization</label><input name="company" type="text" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Email Address</label><input required name="email" type="email" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Phone Number</label><input name="phone" type="tel" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Full Name</label><input required name="fullName" type="text" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Company / Organization</label><input name="company" type="text" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Email Address</label><input required name="email" type="email" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Phone Number</label><input name="phone" type="tel" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
           </div>
         </div>
 
@@ -847,7 +952,7 @@ const StartProjectPage = ({ onBack }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Primary Service Needed</label>
-              <select required name="service" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors appearance-none">
+              <select required name="service" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors appearance-none">
                 <option value="">Select a service...</option>
                 <option value="motion">Motion Design / Reels</option>
                 <option value="brand">Brand Identity</option>
@@ -859,7 +964,7 @@ const StartProjectPage = ({ onBack }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Estimated Budget Range</label>
-              <select name="budget" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors appearance-none">
+              <select name="budget" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors appearance-none">
                 <option value="">Select budget...</option>
                 <option value="<500">Less than $500</option>
                 <option value="500-1000">$500 – $1,000</option>
@@ -871,7 +976,7 @@ const StartProjectPage = ({ onBack }) => {
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-white/70 mb-2">Project Description</label>
-              <textarea required name="description" rows={5} placeholder="Tell us about the project goals, target audience, and specific deliverables..." className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors"></textarea>
+              <textarea required name="description" rows={5} placeholder="Tell us about the project goals, target audience, and specific deliverables..." className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors"></textarea>
             </div>
           </div>
         </div>
@@ -880,20 +985,20 @@ const StartProjectPage = ({ onBack }) => {
           <h3 className="text-2xl font-semibold border-b border-white/10 pb-4">03. Assets & Additional Info</h3>
           <div>
             <label className="block text-sm font-medium text-white/70 mb-2">Attach Files / Brief (Optional)</label>
-            <div className="w-full bg-[#111] border-2 border-dashed border-white/20 rounded-lg p-8 flex flex-col items-center justify-center text-white/50 text-sm text-center">
+            <div className="w-full border-2 border-dashed border-white/20 rounded-lg p-8 flex flex-col items-center justify-center text-white/50 text-sm text-center" style={{ backgroundColor: COLORS.formInputBg }}>
               File attachments aren't wired up yet — for now, please mention in your description that you have files to share and we'll follow up for them by email.
             </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-white/70 mb-2">Preferred Contact Method</label>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="contactMethod" value="email" defaultChecked className="accent-[#3284EF]" /> Email</label>
-              <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="contactMethod" value="phone" className="accent-[#3284EF]" /> Phone</label>
+              <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="contactMethod" value="email" defaultChecked style={{ accentColor: COLORS.formRadioAccent }} /> Email</label>
+              <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="contactMethod" value="phone" style={{ accentColor: COLORS.formRadioAccent }} /> Phone</label>
             </div>
           </div>
         </div>
 
-        <button type="submit" className={`w-full py-5 rounded-lg font-bold text-lg tracking-wide hover:opacity-90 transition-opacity ${THEME.gradient}`}>Submit Project Brief</button>
+        <button type="submit" className="w-full py-5 rounded-lg font-bold text-lg tracking-wide hover:opacity-90 transition-opacity text-white" style={{ backgroundImage: `linear-gradient(to right, ${COLORS.startFormSubmitGradientFrom}, ${COLORS.startFormSubmitGradientVia}, ${COLORS.startFormSubmitGradientTo})` }}>Submit Project Brief</button>
       </form>
     </motion.div>
   );
@@ -927,37 +1032,37 @@ const ContactPage = ({ onBack }) => {
         <div className="space-y-8">
           <div>
             <div className="text-sm font-medium text-white/40 uppercase tracking-widest mb-1">Email</div>
-            <a href={`mailto:${SITE.contactEmail}`} className="text-2xl font-light hover:text-[#3284EF] transition-colors">{SITE.contactEmail}</a>
+            <a href={`mailto:${SITE.contactEmail}`} className="text-2xl font-light transition-colors hover:text-[var(--contact-email-hover)]" style={{ '--contact-email-hover': COLORS.contactEmailHover }}>{SITE.contactEmail}</a>
           </div>
           <div>
             <div className="text-sm font-medium text-white/40 uppercase tracking-widest mb-1">Social</div>
-            <div className="flex gap-4 mt-2">
-              <a href="#" className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center hover:bg-[#3284EF] transition-colors"><Instagram size={18} /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center hover:bg-[#3284EF] transition-colors"><Twitter size={18} /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-[#111] flex items-center justify-center hover:bg-[#3284EF] transition-colors"><Linkedin size={18} /></a>
+            <div className="flex gap-4 mt-2" style={{ '--contact-icon-hover': COLORS.contactSocialIconHoverBg }}>
+              <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--contact-icon-hover)]" style={{ backgroundColor: COLORS.contactSocialIconBg }}><Instagram size={18} /></a>
+              <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--contact-icon-hover)]" style={{ backgroundColor: COLORS.contactSocialIconBg }}><Twitter size={18} /></a>
+              <a href="#" className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[var(--contact-icon-hover)]" style={{ backgroundColor: COLORS.contactSocialIconBg }}><Linkedin size={18} /></a>
             </div>
           </div>
           <div><MagneticButton variant="secondary" className="mt-4">Chat on WhatsApp</MagneticButton></div>
         </div>
       </div>
 
-      <div className="w-full md:w-1/2 bg-[#0a0a0a] p-8 md:p-12 rounded-3xl border border-white/5">
+      <div className="w-full md:w-1/2 p-8 md:p-12 rounded-3xl border border-white/5" style={{ backgroundColor: COLORS.contactFormCardBg }}>
         {sent ? (
           <div className="h-full flex flex-col items-center justify-center text-center py-12">
-            <CheckCircle2 size={56} className="text-[#3284EF] mb-6" />
+            <CheckCircle2 size={56} className="mb-6" style={{ color: COLORS.contactSuccessIcon }} />
             <h3 className="text-2xl font-bold mb-2">Message sent.</h3>
             <p className="text-white/60">We'll get back to you shortly.</p>
           </div>
         ) : (
-          <form name="contact" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit} className="space-y-6">
+          <form name="contact" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit} className="space-y-6" style={{ '--form-input-bg': COLORS.formInputBg, '--form-focus-border': COLORS.formInputFocusBorder }}>
             <input type="hidden" name="form-name" value="contact" />
             <p className="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
             {error && <p className="text-red-400 text-sm">Something went wrong — please try again or email us directly.</p>}
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Name</label><input required name="name" type="text" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Email</label><input required name="email" type="email" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Subject</label><input required name="subject" type="text" className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors" /></div>
-            <div><label className="block text-sm font-medium text-white/70 mb-2">Message</label><textarea required name="message" rows={4} className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#3284EF] transition-colors"></textarea></div>
-            <button type="submit" className="w-full py-4 bg-white text-black font-bold rounded-lg hover:bg-[#3284EF] hover:text-white transition-colors">Send Message</button>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Name</label><input required name="name" type="text" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Email</label><input required name="email" type="email" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Subject</label><input required name="subject" type="text" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors" /></div>
+            <div><label className="block text-sm font-medium text-white/70 mb-2">Message</label><textarea required name="message" rows={4} className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors"></textarea></div>
+            <button type="submit" className="w-full py-4 text-black font-bold rounded-lg transition-colors hover:bg-[var(--send-hover)] hover:text-white" style={{ backgroundColor: '#ffffff', '--send-hover': COLORS.contactSendButtonHoverBg }}>Send Message</button>
           </form>
         )}
       </div>
@@ -1001,15 +1106,16 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#3284EF] selection:text-white font-sans overflow-x-hidden">
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 py-4 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+    <div className="min-h-screen text-white font-sans overflow-x-hidden" style={{ backgroundColor: COLORS.pageBackground }}>
+      <style>{`::selection { background-color: ${COLORS.textSelectionBackground}; color: #fff; }`}</style>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 py-4 flex justify-between items-center ${scrolled ? 'backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`} style={scrolled ? { backgroundColor: COLORS.navScrolledBg } : {}}>
         <div onClick={() => navigate('home')} className="cursor-pointer"><Logo variant="nav" /></div>
 
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-          <button onClick={() => navigate('home')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'home' ? 'text-[#3284EF]' : ''}`}>Work</button>
-          <button onClick={() => navigate('about')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'about' ? 'text-[#3284EF]' : ''}`}>About</button>
-          <button onClick={() => navigate('contact')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'contact' ? 'text-[#3284EF]' : ''}`}>Contact</button>
-          <button onClick={() => navigate('start')} className="px-5 py-2 bg-white text-black rounded-full hover:bg-[#3284EF] hover:text-white transition-colors">Start Project</button>
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium" style={{ '--nav-active': COLORS.navLinkActive }}>
+          <button onClick={() => navigate('home')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'home' ? 'text-[var(--nav-active)]' : ''}`}>Work</button>
+          <button onClick={() => navigate('about')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'about' ? 'text-[var(--nav-active)]' : ''}`}>About</button>
+          <button onClick={() => navigate('contact')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'contact' ? 'text-[var(--nav-active)]' : ''}`}>Contact</button>
+          <button onClick={() => navigate('start')} className="px-5 py-2 rounded-full transition-colors hover:bg-[var(--nav-cta-hover)] hover:text-white" style={{ backgroundColor: COLORS.navCtaBg, color: '#000000', '--nav-cta-hover': COLORS.navCtaHoverBg }}>Start Project</button>
         </div>
 
         <button className="md:hidden relative z-50" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -1019,11 +1125,11 @@ const App = () => {
 
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 z-40 bg-black flex flex-col items-center justify-center gap-8 text-2xl font-semibold">
-            <button onClick={() => navigate('home')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'home' ? 'text-[#3284EF]' : ''}`}>Work</button>
-            <button onClick={() => navigate('about')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'about' ? 'text-[#3284EF]' : ''}`}>About</button>
-            <button onClick={() => navigate('contact')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'contact' ? 'text-[#3284EF]' : ''}`}>Contact</button>
-            <button onClick={() => navigate('start')} className="px-8 py-3 bg-white text-black rounded-full hover:bg-[#3284EF] hover:text-white transition-colors mt-4">Start Project</button>
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 text-2xl font-semibold" style={{ backgroundColor: COLORS.navMobileMenuBg, '--nav-active': COLORS.navLinkActive }}>
+            <button onClick={() => navigate('home')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'home' ? 'text-[var(--nav-active)]' : ''}`}>Work</button>
+            <button onClick={() => navigate('about')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'about' ? 'text-[var(--nav-active)]' : ''}`}>About</button>
+            <button onClick={() => navigate('contact')} className={`hover:text-[var(--nav-active)] transition-colors ${currentRoute === 'contact' ? 'text-[var(--nav-active)]' : ''}`}>Contact</button>
+            <button onClick={() => navigate('start')} className="px-8 py-3 rounded-full transition-colors hover:bg-[var(--nav-cta-hover)] hover:text-white mt-4" style={{ backgroundColor: COLORS.navCtaBg, color: '#000000', '--nav-cta-hover': COLORS.navCtaHoverBg }}>Start Project</button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1063,7 +1169,7 @@ const App = () => {
         </AnimatePresence>
       </main>
 
-      <footer className="bg-black pt-32 pb-12 px-6 border-t border-white/10 relative z-10">
+      <footer className="pt-32 pb-12 px-6 border-t border-white/10 relative z-10" style={{ backgroundColor: COLORS.footerBg }}>
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
           <div className="max-w-md">
             <Logo variant="footer" />
@@ -1095,7 +1201,7 @@ const App = () => {
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             {/* Real CMS — takes you to the live Decap CMS admin panel */}
-            <a href="/admin/" className="hover:text-[#3284EF] transition-colors" title="Edit this site"><Sparkles size={14} /></a>
+            <a href="/admin/" className="transition-colors hover:text-[var(--admin-hover)]" style={{ '--admin-hover': COLORS.footerAdminLinkHover }} title="Edit this site"><Sparkles size={14} /></a>
           </div>
         </div>
       </footer>
