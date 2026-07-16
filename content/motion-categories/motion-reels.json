@@ -1,0 +1,8 @@
+{
+  "subcategory": "Motion Reels",
+  "order": 1,
+  "videos": [
+    { "title": "Nike Summer", "ratio": "9:16", "video_upload": "", "video_url": "https://player.vimeo.com/external/494254256.sd.mp4?s=d00fa53f2c9ff506a59b208ebcbff98991461947&profile_id=165" },
+    { "title": "Adidas Boost", "ratio": "9:16", "video_upload": "", "video_url": "https://player.vimeo.com/external/517090081.sd.mp4?s=c23573216ccf8983e20e8b2b73bc24e542ccb308&profile_id=165" }
+  ]
+}
