@@ -49,17 +49,24 @@ const SafeImage = ({ src, fallback = FALLBACK_IMAGE, ...props }) => {
   );
 };
 
-// Renders the CMS-uploaded logo (content/site.json -> logo) when one has
-// been set in Decap; otherwise falls back to the default "GB STUDIOS"
-// letter mark so the site never looks broken with no logo uploaded.
-const Logo = () => {
-  if (SITE.logo) {
+// Renders the CMS-uploaded logo (content/site.json -> navLogo / footerLogo)
+// for whichever spot it's used in, falling back to the default letter mark
+// if nothing has been uploaded for that spot. Nav and footer are fully
+// independent: different image, and each has its own height class below
+// so you can size them separately.
+const Logo = ({ variant = "nav" }) => {
+  const src = variant === "footer" ? SITE.footerLogo : SITE.navLogo;
+  // Change h-8 to resize the nav logo, h-8 in the footer branch to resize
+  // the footer logo — independently of each other.
+  const sizeClass = variant === "footer" ? "h-8 w-auto" : "h-8 w-auto";
+
+  if (src) {
     return (
       <div className="flex items-center group cursor-pointer z-50 relative">
         <img
-          src={SITE.logo}
+          src={src}
           alt="GB Studios"
-          className="h-8 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
+          className={`${sizeClass} object-contain transition-opacity duration-500 group-hover:opacity-80`}
         />
       </div>
     );
@@ -977,7 +984,7 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-[#3284EF] selection:text-white font-sans overflow-x-hidden">
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 px-6 py-4 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
-        <div onClick={() => navigate('home')} className="cursor-pointer"><Logo /></div>
+        <div onClick={() => navigate('home')} className="cursor-pointer"><Logo variant="nav" /></div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           <button onClick={() => navigate('home')} className={`hover:text-[#3284EF] transition-colors ${currentRoute === 'home' ? 'text-[#3284EF]' : ''}`}>Work</button>
@@ -1040,7 +1047,7 @@ const App = () => {
       <footer className="bg-black pt-32 pb-12 px-6 border-t border-white/10 relative z-10">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start gap-16 mb-24">
           <div className="max-w-md">
-            <Logo />
+            <Logo variant="footer" />
             <p className="text-white/50 mt-6 leading-relaxed">{SITE.footerBlurb}</p>
           </div>
           <div className="flex gap-16">

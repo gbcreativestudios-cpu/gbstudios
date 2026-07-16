@@ -1,24 +1,21 @@
 {
-  "startYear": 2020,
-  "logo": "/uploads/fav-2-500x.webp",
-  "favicon": "/uploads/fav-2-500x.webp",
+  "startYear": 2018,
+  "navLogo": "",
+  "footerLogo": "",
+  "favicon": "",
   "hero": {
     "media_type": "video",
-    "media_video_upload": "https://youtube.com/shorts/sNzqpwehB6k?si=pLK8Pv5RcplJgYYM",
-    "media_video_url": "",
+    "media_video_upload": "",
+    "media_video_url": "https://player.vimeo.com/external/517090081.sd.mp4?s=c23573216ccf8983e20e8b2b73bc24e542ccb308&profile_id=165",
     "media_image": "",
     "alignment": "bottom-left",
-    "headline": "Creative Without Compromise.",
-    "subheadline": "Not every idea deserves attention. We shape the ones that do—creating work that feels inevitable, memorable, and impossible to ignore."
+    "headline": "Clarity for Creativity.",
+    "subheadline": "A premium creative studio specializing in motion design, brand identity, and immersive event visuals for global forward-thinking brands."
   },
   "brands": [
-    "/uploads/icon-white.png",
-    "/uploads/c-c-04.png",
-    "/uploads/the-wh-4-.png",
-    "/uploads/main-logo-white.png",
-    "/uploads/bfresh-2-.png",
-    "/uploads/asset-5.png",
-    "/uploads/white-500x.webp"
+    { "logo": "" },
+    { "logo": "" },
+    { "logo": "" }
   ],
   "footerBlurb": "GB Studios is a premium creative studio building highly crafted visual experiences for brands that want to stand out.",
   "contactEmail": "hello@gbstudios.com"

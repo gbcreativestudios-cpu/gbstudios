@@ -185,11 +185,16 @@ collections:
           - { label: "Studio Founded Year", name: "startYear", widget: "number", hint: "Used to auto-calculate 'years of experience'." }
           - { label: "Contact Email", name: "contactEmail", widget: "string" }
           - { label: "Footer Blurb", name: "footerBlurb", widget: "text" }
-          - label: "Logo"
-            name: "logo"
+          - label: "Nav Logo"
+            name: "navLogo"
             widget: "image"
             required: false
-            hint: "Shown in the top nav and footer. Leave blank to keep the default 'GB STUDIOS' letter mark. Transparent PNG or SVG recommended — it's displayed at a fixed height."
+            hint: "Shown in the top nav bar. Leave blank to keep the default 'GB STUDIOS' letter mark."
+          - label: "Footer Logo"
+            name: "footerLogo"
+            widget: "image"
+            required: false
+            hint: "Shown in the footer. Leave blank to keep the default 'GB STUDIOS' letter mark. Independent from the Nav Logo above — upload a different version (e.g. lighter, simplified) if you want."
           - label: "Favicon"
             name: "favicon"
             widget: "image"
