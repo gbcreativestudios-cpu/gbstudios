@@ -161,7 +161,7 @@ const Logo = ({ variant = "nav" }) => {
   const src = variant === "footer" ? SITE.footerLogo : SITE.navLogo;
   // Change h-8 to resize the nav logo, h-8 in the footer branch to resize
   // the footer logo — independently of each other.
-  const sizeClass = variant === "footer" ? "h-8 w-auto" : "h-8 w-auto";
+  const sizeClass = variant === "footer" ? "h-4 w-auto" : "h-4 w-auto";
 
   if (src) {
     return (
