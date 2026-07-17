@@ -18,6 +18,8 @@ collections:
     folder: "content/projects"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     slug: "{{slug}}"
     summary: "{{title}} — {{category}}"
     fields:
@@ -117,6 +119,8 @@ collections:
     folder: "content/motion-categories"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     slug: "{{slug}}"
     summary: "{{subcategory}}"
     fields:
@@ -138,6 +142,8 @@ collections:
     folder: "content/testimonials"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     slug: "{{author}}"
     summary: "{{author}} — {{role}}"
     fields:
@@ -154,6 +160,8 @@ collections:
     folder: "content/team"
     create: true
     delete: true
+    extension: "json"
+    format: "json"
     slug: "{{name}}"
     summary: "{{name}} — {{role}}"
     fields:

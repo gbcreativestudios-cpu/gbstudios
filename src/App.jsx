@@ -389,7 +389,7 @@ const Hero = ({ onNavigate }) => {
 };
 
 const BrandTicker = () => {
-  const brands = (SITE.brands || []).filter(b => b?.logo);
+  const brands = (SITE.brands || []).filter(Boolean);
   const tickerItems = [...brands, ...brands, ...brands, ...brands];
 
   if (brands.length === 0) return null;
@@ -403,10 +403,10 @@ const BrandTicker = () => {
         transition={{ ease: "linear", duration: 30, repeat: Infinity }}
         className="flex gap-16 md:gap-32 min-w-max px-8 items-center"
       >
-        {tickerItems.map((brand, i) => (
+        {tickerItems.map((logoUrl, i) => (
           <img
             key={i}
-            src={brand.logo}
+            src={logoUrl}
             alt="Brand logo"
             className="h-8 md:h-10 w-auto object-contain grayscale transition-opacity duration-300 hover:opacity-100"
             style={{ opacity: TICKER_LOGO_OPACITY }}
