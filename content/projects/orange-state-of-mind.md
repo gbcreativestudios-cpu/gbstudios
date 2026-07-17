@@ -1,6 +1,6 @@
 ---
 title: Orange State of Mind
-client: IJIN DAAYA
+client: Afro Juju
 year: "2026"
 category: Music Covers
 industry: ENTERTAINMENT
@@ -9,8 +9,8 @@ services: []
 content:
   brandMotion:
     active: false
-  motionAssets:
-    - ratio: 16:9
+    video_url: ""
+  motionAssets: []
   blocks:
     - type: gallery
       images:
