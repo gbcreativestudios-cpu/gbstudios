@@ -14,8 +14,16 @@
     "motionAssets": [],
     "blocks": [
       {
-        "type": "gallery",
-        "images": ["/uploads/osom.png", "/uploads/osom-1-.png"]
+        "type": "full-width-image",
+        "url": "/uploads/osom.png"
+      },
+      {
+        "type": "text",
+        "text": "to test"
+      },
+      {
+        "type": "full-width-image",
+        "url": "/uploads/osom-1-.png"
       }
     ]
   }
