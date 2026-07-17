@@ -161,7 +161,7 @@ const Logo = ({ variant = "nav" }) => {
   const src = variant === "footer" ? SITE.footerLogo : SITE.navLogo;
   // Change h-8 to resize the nav logo, h-8 in the footer branch to resize
   // the footer logo — independently of each other.
-  const sizeClass = variant === "footer" ? "h-4 w-auto" : "h-4 w-auto";
+  const sizeClass = variant === "footer" ? "h-8 w-auto" : "h-8 w-auto";
 
   if (src) {
     return (
@@ -896,14 +896,20 @@ const encodeForNetlify = (formData) => {
 const StartProjectPage = ({ onBack }) => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
+  const [fileNames, setFileNames] = useState([]);
+  const [selectedService, setSelectedService] = useState('');
+  const [showBrandFormModal, setShowBrandFormModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Uses the raw FormData (multipart/form-data) rather than the
+    // urlencoded helper below — file inputs can't be represented as a
+    // urlencoded string, and letting fetch set its own Content-Type header
+    // (with the correct multipart boundary) is required for uploads to work.
     const formData = new FormData(e.target);
     fetch('/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encodeForNetlify(formData),
+      body: formData,
     })
       .then(() => setSubmitted(true))
       .catch(() => setError(true));
@@ -952,7 +958,7 @@ const StartProjectPage = ({ onBack }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Primary Service Needed</label>
-              <select required name="service" className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors appearance-none">
+              <select required name="service" onChange={(e) => setSelectedService(e.target.value)} className="w-full bg-[var(--form-input-bg)] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--form-focus-border)] transition-colors appearance-none">
                 <option value="">Select a service...</option>
                 <option value="motion">Motion Design / Reels</option>
                 <option value="brand">Brand Identity</option>
@@ -961,6 +967,17 @@ const StartProjectPage = ({ onBack }) => {
                 <option value="campaign">Campaign Visuals</option>
                 <option value="other">Other / Multi-disciplinary</option>
               </select>
+              {selectedService === 'brand' && SITE.brandIdentityFormUrl && (
+                <button
+                  type="button"
+                  onClick={() => setShowBrandFormModal(true)}
+                  className="mt-3 w-full flex items-center justify-between gap-3 rounded-lg border border-white/10 px-4 py-3 text-sm text-left transition-colors hover:border-[var(--brand-form-hover)]"
+                  style={{ backgroundColor: COLORS.formInputBg, '--brand-form-hover': COLORS.primaryButtonBg }}
+                >
+                  <span>Brand Identity projects use a dedicated intake form — click to fill it out</span>
+                  <ArrowUpRight size={16} className="flex-shrink-0" />
+                </button>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Estimated Budget Range</label>
@@ -985,9 +1002,21 @@ const StartProjectPage = ({ onBack }) => {
           <h3 className="text-2xl font-semibold border-b border-white/10 pb-4">03. Assets & Additional Info</h3>
           <div>
             <label className="block text-sm font-medium text-white/70 mb-2">Attach Files / Brief (Optional)</label>
-            <div className="w-full border-2 border-dashed border-white/20 rounded-lg p-8 flex flex-col items-center justify-center text-white/50 text-sm text-center" style={{ backgroundColor: COLORS.formInputBg }}>
-              File attachments aren't wired up yet — for now, please mention in your description that you have files to share and we'll follow up for them by email.
-            </div>
+            <label htmlFor="attachments" className="w-full border-2 border-dashed border-white/20 rounded-lg p-8 flex flex-col items-center justify-center text-white/50 text-sm text-center cursor-pointer hover:border-white/40 transition-colors" style={{ backgroundColor: COLORS.formInputBg }}>
+              {fileNames.length > 0 ? (
+                <span className="text-white">{fileNames.join(', ')}</span>
+              ) : (
+                <span>Click to attach files (briefs, references, mockups — up to 10MB total)</span>
+              )}
+              <input
+                id="attachments"
+                type="file"
+                name="attachments"
+                multiple
+                className="hidden"
+                onChange={(e) => setFileNames(Array.from(e.target.files || []).map(f => f.name))}
+              />
+            </label>
           </div>
           <div>
             <label className="block text-sm font-medium text-white/70 mb-2">Preferred Contact Method</label>
@@ -1000,6 +1029,47 @@ const StartProjectPage = ({ onBack }) => {
 
         <button type="submit" className="w-full py-5 rounded-lg font-bold text-lg tracking-wide hover:opacity-90 transition-opacity text-white" style={{ backgroundImage: `linear-gradient(to right, ${COLORS.startFormSubmitGradientFrom}, ${COLORS.startFormSubmitGradientVia}, ${COLORS.startFormSubmitGradientTo})` }}>Submit Project Brief</button>
       </form>
+
+      <AnimatePresence>
+        {showBrandFormModal && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center px-6 bg-black/70 backdrop-blur-sm"
+            onClick={() => setShowBrandFormModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              className="max-w-md w-full rounded-2xl border border-white/10 p-8 text-center"
+              style={{ backgroundColor: COLORS.contactFormCardBg }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-xl font-bold mb-3">One more step</h3>
+              <p className="text-white/60 text-sm leading-relaxed mb-8">
+                You're about to open our Brand Identity intake form in a new tab. Come back to this tab afterward to finish and submit your project brief here.
+              </p>
+              <div className="flex flex-col gap-3">
+                <a
+                  href={SITE.brandIdentityFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setShowBrandFormModal(false)}
+                  className="w-full py-3 rounded-lg font-semibold text-white transition-opacity hover:opacity-90"
+                  style={{ backgroundColor: COLORS.primaryButtonBg }}
+                >
+                  OK, take me there
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowBrandFormModal(false)}
+                  className="w-full py-3 rounded-lg font-medium text-white/60 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

@@ -184,6 +184,11 @@ collections:
         fields:
           - { label: "Studio Founded Year", name: "startYear", widget: "number", hint: "Used to auto-calculate 'years of experience'." }
           - { label: "Contact Email", name: "contactEmail", widget: "string" }
+          - label: "Brand Identity Intake Form URL"
+            name: "brandIdentityFormUrl"
+            widget: "string"
+            required: false
+            hint: "Paste your Google Form link here (Send > click the link icon in Google Forms to get a shareable URL). When a client picks 'Brand Identity' on the Start a Project page, a link to this form appears. Leave blank to hide it."
           - { label: "Footer Blurb", name: "footerBlurb", widget: "text" }
           - label: "Nav Logo"
             name: "navLogo"
